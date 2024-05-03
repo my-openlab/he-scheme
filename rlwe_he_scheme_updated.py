@@ -203,16 +203,19 @@ def encrypt(pk, size, q, t, poly_mod, m, std1):
     e1 = gen_normal_poly(size, 0, std1)
     e2 = gen_normal_poly(size, 0, std1)
     u = gen_binary_poly(size)
-    ct0 = polyadd(
-        polyadd(
-            polymul(pk[0], u, q, poly_mod),
-            e1, q, poly_mod),
-        scaled_m, q, poly_mod
-    )
-    ct1 = polyadd(
-        polymul(pk[1], u, q, poly_mod),
-        e2, q, poly_mod
-    )
+    
+    u_pk0 = polymul(pk[0], u, q, poly_mod)
+    u_pk1 = polymul(pk[1], u, q, poly_mod)
+
+    sum_pk0_e1 = polyadd(u_pk0, e1, q, poly_mod)
+    sum_pk1_e2 = polyadd(u_pk1, e2, q, poly_mod)
+
+    # Every thing can be pre-computed until here and is not really in the critical path
+
+    ct0 = polyadd(sum_pk0_e1, scaled_m, q, poly_mod)
+    
+    ct1 = sum_pk1_e2
+
     return (ct0, ct1)
 
 
