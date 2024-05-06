@@ -39,10 +39,12 @@ def polymul(x, y, modulus, poly_mod):
     Returns:
         A polynomial in Z_modulus[X]/(poly_mod).
     """
-    return np.int64(
-        np.round(poly.polydiv(poly.polymul(x, y) %
-                              modulus, poly_mod)[1] % modulus)
-    )
+    
+    p_mul = poly.polymul(x, y)
+
+    q,rem = poly.polydiv(p_mul % modulus, poly_mod)
+
+    return np.int64( np.round(rem % modulus) )
 
 
 def polyadd(x, y, modulus, poly_mod):
